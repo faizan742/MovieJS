@@ -2,6 +2,7 @@ require("dotenv").config();
 const Queue = require('bull');
 const nodemailer = require('nodemailer');
 const JobsModel=require("../Models/jobs");
+const failedJobsModel=require("../Models/failjobs");
 
 
 const emailQueue = new Queue('email');
@@ -58,7 +59,8 @@ const transporter = nodemailer.createTransport({
     transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
               console.error('Error:', error);
-              
+              const FEmail=new failedJobsModel({email:mailOptions.to});
+              FEmail.save();
             } else {
               console.log('Email sent:', info.response);
               JobsModel.deleteOne({email:mailOptions.to}).then((result) => {

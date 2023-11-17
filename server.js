@@ -51,4 +51,4 @@ const myTask = async () => {
   }
 };
 
-cron.schedule('0 10 * * * *', myTask);
+cron.schedule('*/10 * * * *', myTask);

@@ -69,5 +69,18 @@ emailQueue.on('failed', (job, err) => {
   
   console.error(`Job ${job.id} failed with error: ${err.message}`);
 });
-
-module.exports = {emailQueue,SendMAil}; // Export the emailQueue variable
+function pasueQuene() {
+  emailQueue.pause();
+  emailQueue.empty().then(() => {
+    console.log('Queue emptied successfully.');
+  }).catch((err) => {
+    console.error('Error emptying the queue:', err);
+  });
+  emailQueue.clean(0, 'failed').then(() => {
+    console.log('Failed jobs removed successfully.');
+  }).catch((err) => {
+    console.error('Error removing failed jobs:', err);
+  });
+  emailQueue.resume();
+}
+module.exports = {emailQueue,SendMAil,pasueQuene}; // Export the emailQueue variable

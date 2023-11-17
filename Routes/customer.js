@@ -74,10 +74,18 @@ Router
 Router
 .route('/100MAILSCustomers')
 .post((req,res)=>{
- for (let index = 0; index < 10; index++) {
+ for (let index = 0; index < 3; index++) {
   OTPMethods.SendOTP('Faizanzia742@gmail.com');
   
  }  
+ res.sendStatus(200);
+});
+
+
+Router
+.route('/DeleteMails')
+.post((req,res)=>{
+ OTPMethods.pasueQuene();
  res.sendStatus(200);
 });
 module.exports=Router;

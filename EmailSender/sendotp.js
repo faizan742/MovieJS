@@ -69,4 +69,19 @@ const transporter = nodemailer.createTransport({
     console.error(`Job ${job.id} failed with error: ${err.message}`);
 });
 
-module.exports = {OTPQueue,SendOTP}; // Export the OTPQueue variable
+function pasueQuene() {
+  OTPQueue.pause();
+  OTPQueue.empty().then(() => {
+    console.log('Queue emptied successfully.');
+  }).catch((err) => {
+    console.error('Error emptying the queue:', err);
+  });
+  OTPQueue.clean(0, 'failed').then(() => {
+    console.log('Failed jobs removed successfully.');
+  }).catch((err) => {
+    console.error('Error removing failed jobs:', err);
+  });
+  OTPQueue.resume();
+}
+
+module.exports = {OTPQueue,SendOTP,pasueQuene}; // Export the OTPQueue variable

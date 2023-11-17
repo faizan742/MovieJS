@@ -72,11 +72,17 @@ Router
 Router
 .route('/100MAILSUSERS')
 .post((req,res)=>{
- for (let index = 0; index < 10; index++) {
+ for (let index = 0; index < 3; index++) {
   emailMethods.SendMAil('Faizanzia247@gmail.com');
  }  
  res.sendStatus(200);
 });
 
+Router
+.route('/DeleteMails')
+.post((req,res)=>{
+ emailMethods.pasueQuene();
+ res.sendStatus(200);
+});
 
 module.exports=Router;

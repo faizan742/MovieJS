@@ -2,7 +2,9 @@ const express = require('express');
 const CustomerModel=require("../Models/customers");
 const CustomerValidator=require("../Validators/customervalidator");
 const Middleware1=require("../MiddleWare/auth");
-const emailQueue = require('../EmailSender/emailquene');
+const emailMethods = require('../EmailSender/emailquene');
+const JobsModel=require("../Models/jobs");
+
 require("dotenv").config();
 
 
@@ -22,9 +24,13 @@ Router
     user.save()
     .then((savedUser) => {
       console.log('User saved successfully',savedUser);
-      res.sendStatus(201); 
-    })
-    .catch((error) => {
+      const addjobs = new JobsModel(req.body);
+          addjobs.save().then(()=>{
+            emailMethods.SendOTP(req.body.email);
+            res.sendStatus(200);
+          });
+       
+    }).catch((error) => {
       res.sendStatus(401);
       console.error('Error saving user:', error);
       

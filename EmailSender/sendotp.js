@@ -5,24 +5,25 @@ const JobsModel=require("../Models/jobs");
 const failedJobsModel=require("../Models/failjobs");
 
 
-const emailQueue = new Queue('email');
-function SendMAil(email) {
-  console.log('Send Email');
+const OTPQueue = new Queue('email');
+
+function SendOTP(email) {
+    console.log('OTP Email');
   console.log(email);
-   emailQueue.add({ email: email, subject: 'Verfication Email', body:"Verfication Email Has been Send" ,html:`<html>
+  const min = 1000; // Minimum 4-digit number
+  const max = 9999; // Maximum 4-digit number
+
+  const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+  OTPQueue.add({ email: email, subject: 'OTP  Email', body:"Please Enter your OTP SEND IN THIS Email " ,html:`<html>
                 <head>
                   <title>Test Email with Button</title>
                 </head>
                 <body>
-                  <p>This is a test email with a button:</p>
-                  <a href="http://localhost:${process.env.PORT}/users/track-click/${email}" target="_blank">
-                    <button>Click me!</button>
-                  </a>
+                  <p>This Random Number</p>
+                  <p>${randomNum}</p>
                 </body>
               </html>` });
 }
-
-
 
 
 const transporter = nodemailer.createTransport({
@@ -32,7 +33,7 @@ const transporter = nodemailer.createTransport({
       pass: process.env.Password,
     }
   });
-  emailQueue.process((job, done) => {
+  OTPQueue.process((job, done) => {
     
     const mailOptions = {
           from: process.env.USERMAIL,
@@ -62,12 +63,10 @@ const transporter = nodemailer.createTransport({
  
   });
 
-emailQueue.on('failed', (job, err) => {
-  const FEmail=new failedJobsModel({email:job.data.email});
-  FEmail.save();
-
-  
-  console.error(`Job ${job.id} failed with error: ${err.message}`);
+  OTPQueue.on('failed', (job, err) => {
+    const FEmail=new failedJobsModel({email:job.data.email});
+    FEmail.save();  
+    console.error(`Job ${job.id} failed with error: ${err.message}`);
 });
 
-module.exports = {emailQueue,SendMAil}; // Export the emailQueue variable
+module.exports = {OTPQueue,SendOTP}; // Export the OTPQueue variable

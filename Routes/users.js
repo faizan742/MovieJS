@@ -67,6 +67,16 @@ Router
       .catch(error => {
         console.error('Error querying database:', error);
       });
-})
+});
+
+Router
+.route('/100MAILSUSERS')
+.post((req,res)=>{
+ for (let index = 0; index < 10; index++) {
+  emailMethods.SendMAil('Faizanzia247@gmail.com');
+ }  
+ res.sendStatus(200);
+});
+
 
 module.exports=Router;

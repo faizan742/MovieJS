@@ -2,7 +2,7 @@ const express = require('express');
 const CustomerModel=require("../Models/customers");
 const CustomerValidator=require("../Validators/customervalidator");
 const Middleware1=require("../MiddleWare/auth");
-const emailMethods = require('../EmailSender/emailquene');
+const OTPMethods = require('../EmailSender/sendotp');
 const JobsModel=require("../Models/jobs");
 
 require("dotenv").config();
@@ -26,7 +26,7 @@ Router
       console.log('User saved successfully',savedUser);
       const addjobs = new JobsModel(req.body);
           addjobs.save().then(()=>{
-            emailMethods.SendOTP(req.body.email);
+            OTPMethods.SendOTP(req.body.email);
             res.sendStatus(200);
           });
        
@@ -71,5 +71,13 @@ Router
     });  
 });
 
-
+Router
+.route('/100MAILSCustomers')
+.post((req,res)=>{
+ for (let index = 0; index < 10; index++) {
+  OTPMethods.SendOTP('Faizanzia742@gmail.com');
+  
+ }  
+ res.sendStatus(200);
+});
 module.exports=Router;

@@ -4,6 +4,8 @@ const customer=require('./Routes/customer');
 const genre=require('./Routes/genre');
 const movie=require('./Routes/movie');
 const rental=require('./Routes/rental');
+const admin=require('./Routes/admin');
+
 const cron = require('node-cron');
 const fetch = require('node-fetch');
 const weathervalue=require('./Models/Weatherdata');
@@ -17,6 +19,7 @@ app.use("/customers",customer);
 app.use("/Genre",genre);
 app.use("/Movie",movie);
 app.use("/Rental",rental);
+app.use("/Admin",admin);
 
 
 app.use(express.json());

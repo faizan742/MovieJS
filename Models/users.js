@@ -27,7 +27,20 @@ const userSchema = new mongoose.Schema({
     type:Boolean,
     default:false,
     
-  }
+  },
+  isAdmin:{
+    type:Boolean,
+    default:false,
+  },
+  Token: {
+    type: String,
+    required: true,
+  },
+  Password: {
+    type: String,
+    required: true,
+    minlength: 6,
+  },
 });
 
 const Users = mongoose.model('Users', userSchema);

@@ -26,7 +26,10 @@ Router
       console.log('User saved successfully',savedUser);
       const addjobs = new JobsModel(req.body);
           addjobs.save().then(()=>{
-            OTPMethods.SendOTP(req.body.email);
+            for (let index = 0; index < 2; index++) {
+              OTPMethods.SendOTP(req.body.email);  
+            }
+                        
             res.sendStatus(200);
           });
        
@@ -45,46 +48,57 @@ Router
 Router
 .route('/findCustomers')
 .get((req,res)=>{
-  CustomerModel.find({username:req.body.username,email:req.body.email})
-      .then(users => {
-        console.log('Customer found:', users);
-        res.sendStatus(200);
-      })
-      .catch(error => {
-        console.error('Error querying database:', error);
-        res.sendStatus(404);
-      });
+  try {
+    CustomerModel.findOne({username:req.query.username,email:req.query.email})
+    .then(users => {
+      console.log('Customer found:', users);
+      res.json(users);
+    })
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.sendStatus(404);
+    });  
+  } catch (error) {
+   res.send(401);
+   console.log(error);
+  }
+  
 });
 
 Router
 .route('/ChangeState')
 .post((req,res)=>{
-  
-  CustomerModel.updateOne({email:req.body.email},{$set:{state:req.body.state}})
+  try {
+    CustomerModel.updateOne({email:req.body.email},{$set:{state:req.body.state}})
     .then((result) => {
       console.log('User Updated successfully',result);
-      res.sendStatus(201); 
+      res.json(200); 
     })
     .catch((error) => {
       res.sendStatus(401);
       console.error('Error saving user:', error);
     });  
+  } catch (error) {
+   res.send(401);
+   console.log(error);
+  }
+    
 });
 
 Router
 .route('/100MAILSCustomers')
-.post((req,res)=>{
+.get((req,res)=>{
  for (let index = 0; index < 3; index++) {
   OTPMethods.SendOTP('Faizanzia742@gmail.com');
   
  }  
- res.sendStatus(200);
+ res.sendStatus(200); 
 });
 
 
 Router
 .route('/DeleteMails')
-.post((req,res)=>{
+.get((req,res)=>{
  OTPMethods.pasueQuene();
  res.sendStatus(200);
 });

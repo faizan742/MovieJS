@@ -5,7 +5,7 @@ const JobsModel=require("../Models/jobs");
 const failedJobsModel=require("../Models/failjobs");
 
 
-const OTPQueue = new Queue('email');
+const OTPQueue = new Queue('OTPverfication');
 
 function SendOTP(email) {
     console.log('OTP Email');

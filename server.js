@@ -5,7 +5,7 @@ const genre=require('./Routes/genre');
 const movie=require('./Routes/movie');
 const rental=require('./Routes/rental');
 const admin=require('./Routes/admin');
-
+const GPT=require('./Chat Gpt Api/connectioncode');
 const cron = require('node-cron');
 const fetch = require('node-fetch');
 const weathervalue=require('./Models/Weatherdata');
@@ -20,6 +20,7 @@ app.use("/Genre",genre);
 app.use("/Movie",movie);
 app.use("/Rental",rental);
 app.use("/Admin",admin);
+app.use("/GPT",GPT);
 
 
 app.use(express.json());

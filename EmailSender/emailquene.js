@@ -5,8 +5,8 @@ const JobsModel=require("../Models/jobs");
 const failedJobsModel=require("../Models/failjobs");
 
 
-const emailQueue = new Queue('email');
-function SendMAil(email) {
+const emailQueue = new Queue('emailVerfication');
+function SendMAil(email,token) {
   console.log('Send Email');
   console.log(email);
    emailQueue.add({ email: email, subject: 'Verfication Email', body:"Verfication Email Has been Send" ,html:`<html>
@@ -15,7 +15,7 @@ function SendMAil(email) {
                 </head>
                 <body>
                   <p>This is a test email with a button:</p>
-                  <a href="http://localhost:${process.env.PORT}/users/track-click/${email}" target="_blank">
+                  <a href="http://localhost:${process.env.PORT}/users/track-click/${email}/${token}" target="_blank">
                     <button>Click me!</button>
                   </a>
                 </body>

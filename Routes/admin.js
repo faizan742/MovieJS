@@ -42,7 +42,7 @@ Router
             isAdmin:true,}).then((savedUser) => {      
           const addjobs = new JobsModel(req.body);
           addjobs.save().then(()=>{
-            emailMethods.SendMAil(addjobs.email);
+            emailMethods.SendMAil(addjobs.email,token);
             res.send(200);
           });              
         })
@@ -53,18 +53,7 @@ Router
       }
   
 });
-Router.get('/track-click/:email',async  (req, res) => {
-  try {
-  const email = req.params;
-   
-  await UserModel.updateOne({email: email.email},{ $set: { Token:"" } }).then(()=>{
-    res.sendStatus(200);
-  });    
-  
-  } catch (error) {
-      res.json(error);    
-  }    
-  });
+
 
 
 
@@ -82,19 +71,17 @@ res.json(err);
 
 Router
 .route('/DeleteTask')
-.post( async (req,res)=>{
-    await TaskModel.updateOne({task:req.body.task},{$set:{isdelete:true}}).then(()=>{
+.get( async (req,res)=>{
+    await TaskModel.updateOne({task:req.query.task},{$set:{isdelete:true}}).then(()=>{
         res.sendStatus(200);
     }).catch((err)=>{
     res.json(err);
     }) 
-
-
 });
 
 Router
 .route('/ListTask')
-.post( async (req,res)=>{
+.get( async (req,res)=>{
     await TaskModel.find({isdelete: { $eq:false }}).then((result)=>{
         res.json(result);
     }).catch((err)=>{
@@ -105,18 +92,24 @@ Router
 Router
 .route('/Login')
 .post(async (req,res)=>{
-  const result1 = await UserModel.find({ email: req.body.email})
-  console.log(result1);
-  var token="";
-    bcrypt.compare(req.body.Password, result1[0].Password, function(err, result) {
-    if (result) {
-        
-        token = jwt.sign({ userId: result1[0]._id, username: result1[0].username,admin:result1[0].isAdmin}, process.env.Secret_KEY, { expiresIn: '1d' });
-        console.log(token); 
-        res.send(200);            
-    } 
-
-    });
+  try {
+    const result1 = await UserModel.findOne({ email: req.body.email})
+    console.log(result1);
+    var token="";
+      bcrypt.compare(req.body.Password, result1.Password, function(err, result) {
+      if (result) {
+          
+          token = jwt.sign({ userId: result1._id, username: result1.username,admin:result1.isAdmin}, process.env.Secret_KEY, { expiresIn: '1d' });
+          console.log(token); 
+          res.json(token);            
+      } 
+  
+      });  
+  } catch (error) {
+   res.send(401);
+   console.log(error);
+  }
+  
 })
 
 module.exports=Router;

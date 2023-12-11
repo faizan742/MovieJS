@@ -17,5 +17,5 @@ const generScheme = new mongoose.Schema({
   
 });
 
-const gener = mongoose.model('Genre', generScheme);
+const gener = mongoose.model('Genres', generScheme);
 module.exports = gener;

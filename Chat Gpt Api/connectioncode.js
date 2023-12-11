@@ -1,7 +1,12 @@
 const axios = require('axios');
+const express = require('express');
+
 require('dotenv').config();
-const apiKey = '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';
+const apiKey = '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';
 const apiUrl = 'https://api.openai.com/v1/engines/davinci/completions';
+const Router = express.Router();
+Router.use(express.json());
+Router.use(express.urlencoded({ extended: true }));
 
 const promptText = "WHY IT IS NOT WORKING.";
 
@@ -30,13 +35,25 @@ async function queryChatGPT(prompt) {
         return null;
     }
 }
+Router.route('/CHATGPT').post(async (req,res)=>{
 
-queryChatGPT(promptText)
+    queryChatGPT(req.body.prompt)
     .then(completion => {
         if (completion) {
             console.log('Completion:', completion);
+            res.json('Completion:', completion);
         } else {
             console.log('Failed to get completion.');
+            res.sendStatus(429);
         }
     })
-    .catch(err => console.error('Error:', err));
+    .catch(err =>{
+        console.error('Error:', err);
+        
+    } 
+      
+    );
+
+})
+
+module.exports=Router;
